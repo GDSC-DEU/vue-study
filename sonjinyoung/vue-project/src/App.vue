@@ -1,26 +1,26 @@
+<!-- html 코드 영역(template) -->
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <!-- 데이터 바인딩 = {{}} 사용 -->
+  <div class="name">{{name}}</div>
 </template>
 
+<!-- JavaScript 코드 영역(script) -->
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  // Vue3 = composition API -> setup() 사용
+  setup() {
+    const name = "jinyoung";
+  
+  return {
+    name
+  };
+}
 }
 </script>
 
+<!-- CSS 코드 영역(style) -->
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.name {
+  color:red;
 }
 </style>

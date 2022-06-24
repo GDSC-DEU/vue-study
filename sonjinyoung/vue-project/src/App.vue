@@ -1,5 +1,6 @@
 <!-- html 코드 영역(template) -->
 <template>
+<!-- To-do list add form -->
 <div class="container mt-2">
 <!-- title -->
 <h2>To-Do List</h2>
@@ -10,7 +11,7 @@
 >
   <!-- input -->  
   <div class="flex-grow-1 mr-2">
-  <!-- v-model을 통해 양방향 바인딩 구현 -->
+  <!-- v-model을 통해 양방향 바인딩 구현! -->
   <!-- 양방향 바인딩을 통해 input에 입력한 값을 js 변수에도 저장 -->
     <input
       class="form-control" 
@@ -22,7 +23,7 @@
   <!-- button -->  
   <div>
     <button
-      style="margin-left:5px;"
+      style="margin-left:7px;"
       class="btn btn-primary"
       type="submit" 
     >
@@ -30,8 +31,15 @@
     </button>
   </div>
 </form>
-  {{todos}}
+<!-- add card -->
+<div class="card mt-2">
+  <div class="card-body p-2">
+    <!-- 설정한 todos 초기값 바인딩 -->
+    {{todos[0].subject}}
+  </div>
 </div>
+</div>
+
 </template>
 
 <!-- JavaScript 코드 영역(script) -->
@@ -43,7 +51,10 @@ export default {
   setup() {
     // ref 사용 시 ref()안에 기본 자료형 or 참조형(reactive도 가능) 넣기
     const todo = ref("");
-    const todos = ref([]);
+    // todos 배열에 초깃값 설정
+    const todos = ref([
+      {id:1, subject:'휴대폰 사기'},
+    ]);
  
     // input에서 입력 한 값을 todos 배열에 저장
     const onSubmit = () => {

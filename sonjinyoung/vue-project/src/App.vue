@@ -1,28 +1,37 @@
 <!-- html 코드 영역(template) -->
 <template>
-  <!-- v-bind:class(:class) (데이터 바인딩) -->
-  <div 
-    class="name"
-  >
-    <!-- setup()에 있는 함수 직접 호출 시 다음과 같이 {{greeting(name)}} 으로 표현도 가능 -->
-    <!-- setup()에 있는 변수 바인딩 -->
-    {{name}}
-  </div>
-
+<div class="container mt-2">
+<!-- title -->
+<h2>To-Do List</h2>
+<!-- button에서 submit버튼 누를 시 @submit을 통해 onSubmit 함수 실행 -->
+<form
+  @submit.prevent="onSubmit"
+  class="d-flex"
+>
+  <!-- input -->  
+  <div class="flex-grow-1 mr-2">
   <!-- v-model을 통해 양방향 바인딩 구현 -->
-  <!-- 양방향 바인딩을 통해 input에 쳐놓은 값을 js 변수에도 저장 -->
-  <input 
-    type="text"
-    v-model="name"
-  >
-
-  <!-- click Event(@click)를 위한 button -->
-  <button
-    class="btn btn-primary"
-    @click="onSubmit"    
-  >
-  click
-  </button>
+  <!-- 양방향 바인딩을 통해 input에 입력한 값을 js 변수에도 저장 -->
+    <input
+      class="form-control" 
+      type="text"
+      v-model="todo"
+      placeholder="please add To-do"
+    >
+  </div>
+  <!-- button -->  
+  <div>
+    <button
+      style="margin-left:5px;"
+      class="btn btn-primary"
+      type="submit" 
+    >
+      add
+    </button>
+  </div>
+</form>
+  {{todos}}
+</div>
 </template>
 
 <!-- JavaScript 코드 영역(script) -->
@@ -32,16 +41,21 @@
 export default {
   // Vue3 = composition API -> setup() 사용
   setup() {
-    // ref 사용 시 ref()안에 기본 자료형 넣기
-    const name = ref("jinyoung");
+    // ref 사용 시 ref()안에 기본 자료형 or 참조형(reactive도 가능) 넣기
+    const todo = ref("");
+    const todos = ref([]);
  
-    // name값 변경 위한 함수 
+    // input에서 입력 한 값을 todos 배열에 저장
     const onSubmit = () => {
       // ref 사용시 변수.value로 변경
-      return name.value 
+      return todos.value.push({
+        id:Date.now(),
+        subject:todo.value
+      }); 
     }
   return {
-    name,
+    todo,
+    todos,
     onSubmit
   };
 }
@@ -50,7 +64,5 @@ export default {
 
 <!-- CSS 코드 영역(style) -->
 <style>
-.name {
-  color:red;
-}
+
 </style>

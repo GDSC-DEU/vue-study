@@ -2,23 +2,24 @@
 <template>
   <!-- v-bind:class(:class) (데이터 바인딩) -->
   <div 
-    :class="nameClass"
+    class="name"
   >
     <!-- setup()에 있는 함수 직접 호출 시 다음과 같이 {{greeting(name)}} 으로 표현도 가능 -->
     <!-- setup()에 있는 변수 바인딩 -->
     {{name}}
   </div>
 
-  <!-- v-bind:type(:type), v-bind:value(:value) (데이터 바인딩) -->
+  <!-- v-model을 통해 양방향 바인딩 구현 -->
+  <!-- 양방향 바인딩을 통해 input에 쳐놓은 값을 js 변수에도 저장 -->
   <input 
-    :type="type"
-    :value="name"
+    type="text"
+    v-model="name"
   >
 
   <!-- click Event(@click)를 위한 button -->
   <button
     class="btn btn-primary"
-    @click="updateName"    
+    @click="onSubmit"    
   >
   click
   </button>
@@ -33,22 +34,15 @@ export default {
   setup() {
     // ref 사용 시 ref()안에 기본 자료형 넣기
     const name = ref("jinyoung");
-    // class binding 위한 변수
-    const nameClass = ref("name");
-    // type binding 위한 변수
-    const type = ref("number");
-
+ 
     // name값 변경 위한 함수 
-    const updateName = () => {
+    const onSubmit = () => {
       // ref 사용시 변수.value로 변경
-      name.value = "jinyoung2";
-      type.value = "text";
+      return name.value 
     }
   return {
     name,
-    updateName,
-    nameClass,
-    type
+    onSubmit
   };
 }
 }

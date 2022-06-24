@@ -32,10 +32,15 @@
   </div>
 </form>
 <!-- add card -->
-<div class="card mt-2">
+<!-- v-for를 통해 todos에 있는 객체가 추가 될때마다 card로 생성(v-for와 :key는 한 세트) -->
+<div 
+  class="card mt-2"
+  v-for="todo in todos"
+  :key="todo.id"
+>
   <div class="card-body p-2">
-    <!-- 설정한 todos 초기값 바인딩 -->
-    {{todos[0].subject}}
+    <!-- 설정한 todos 바인딩 -->
+    {{todo.subject}}
   </div>
 </div>
 </div>
@@ -53,7 +58,6 @@ export default {
     const todo = ref("");
     // todos 배열에 초깃값 설정
     const todos = ref([
-      {id:1, subject:'휴대폰 사기'},
     ]);
  
     // input에서 입력 한 값을 todos 배열에 저장
@@ -64,12 +68,12 @@ export default {
         subject:todo.value
       }); 
     }
-  return {
-    todo,
-    todos,
-    onSubmit
-  };
-}
+    return {
+      todo,
+      todos,
+      onSubmit
+    };
+  } 
 }
 </script>
 

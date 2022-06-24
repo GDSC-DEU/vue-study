@@ -20,21 +20,18 @@
 
 <!-- JavaScript 코드 영역(script) -->
 <script>
+  // reactive state를 위한 ref import
+  import {ref} from 'vue';
 export default {
   // Vue3 = composition API -> setup() 사용
   setup() {
-    let name = "jinyoung";
-    // 함수 호출
-    // const greeting = (name) => {
-    //  return "Hello " + name;
-    // }
-    // 함수를 변수로 선언
-    // const greet = greeting(name);
+    // ref 사용 시 ref()안에 기본 자료형 넣기
+    const name = ref("jinyoung");
 
     // name값 변경 위한 함수 
     const updateName = () => {
-      name = "jinyoung good"
-      console.log(name);
+      // ref 사용시 변수.value로 변경
+      name.value = "jinyoung2"
     }
   return {
     name,

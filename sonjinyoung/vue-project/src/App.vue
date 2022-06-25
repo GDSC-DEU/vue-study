@@ -32,7 +32,11 @@
 
 <!-- ToDoCard -->
 <!-- :todos = props(부모 컴포넌트 -> 자식 컴포넌트) -->
-<ToDoList :todos = "todos" @toggle-ToDo="toggleToDo" />
+<ToDoList 
+  :todos = "todos"
+  @toggle-ToDo="toggleToDo"
+  @delete-ToDo="deleteToDo"
+/>
 <!-- end ToDoCard -->
 
 </div>
@@ -70,7 +74,8 @@
       };
 
       // delete 버튼 누를 시 todos 안 해당되는 index를 삭제
-      const deleteTodo = (index) => {
+      // 이때 index 값은 ToDoList.vue의 deleteToDo()를 통해 받음
+      const deleteToDo = (index) => {
         todos.value.splice(index, 1);
       }
       
@@ -82,7 +87,7 @@
     return {
       todos,
       addToDo,
-      deleteTodo,
+      deleteToDo,
       toggleToDo
     };
   } 

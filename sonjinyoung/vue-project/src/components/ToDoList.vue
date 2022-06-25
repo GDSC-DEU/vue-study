@@ -63,8 +63,14 @@ export default {
             context.emit("toggle-ToDo", index);
         };
 
+        // index 값을 부모 컴포넌트에 보내줌
+        const deleteTodo = (index) => {
+            context.emit("delete-ToDo", index);
+        }
+
         return {
             toggleToDo,
+            deleteTodo,
         }
     }
 }

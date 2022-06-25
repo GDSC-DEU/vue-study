@@ -8,7 +8,8 @@
 <h2>To-Do List</h2>
 
 <!-- ToDoSimpleForm.vue-->
-<ToDoSimpleForm/>
+<!-- @addToDo = context.emit() 첫번째 인자에 있는 이벤트 이름 -->
+<ToDoSimpleForm @add-ToDo="addToDo" />
 <!-- end ToDoSimpleForm.vue-->
 
 <!-- empty todos -->
@@ -96,29 +97,13 @@
 
     // Vue3 = composition API -> setup() 사용
     setup() {
-      // ref 사용 시 ref()안에 기본 자료형 or 참조형(reactive도 가능) 넣기
-      const todo = ref("");
       // todos 배열에 초깃값 설정
       const todos = ref([
       ]);
-      // Error Message의 조건부 바인딩을 위한 변수
-      const hasError = ref(false);
   
-      // input에서 입력 한 값을 todos 배열에 저장
-      const onSubmit = () => {
-        // add 버튼을 누를 시 emptyString일 경우
-        // hasError의 값이 true로 바뀌어 조건부 바인딩에 의해 ErrorMessage 출력 
-        if(todo.value === '') {
-          hasError.value = true;
-        } else {
-        // emptyString이 아니면 데이터가 todos 배열에 추가되고 hasError의 값이 false로 변환
-          todos.value.push({
-            id:Date.now(),
-            subject:todo.value,
-            completed:false,
-          });
-          hasError.value = false;
-        }
+      // 자식 컴포넌트에서 받은 데이터를 todos 배열에 저장
+      const addToDo = (todo) => {
+        todos.value.push(todo);
       };
 
       // delete 버튼 누를 시 todos 안 해당되는 index를 삭제
@@ -127,10 +112,8 @@
       }
 
     return {
-      todo,
       todos,
-      onSubmit,
-      hasError,
+      addToDo,
       deleteTodo
     };
   } 

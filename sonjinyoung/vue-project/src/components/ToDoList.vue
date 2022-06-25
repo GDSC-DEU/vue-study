@@ -9,11 +9,12 @@
   <div class="card-body p-2 d-flex align-items-center">
     <!-- check form -->
     <div class="form-check flex-grow-1">
-      <!-- check box(v-model로 true, false 값에 따라 checking) -->
+      <!-- check box(:value와 @change로 자식 -> 부모 컴포넌트에 index값 보냄(props 주의 사항)) -->
       <input
         class="form-check-input"
         type="checkbox"
-        v-model="todo.completed"
+        :value="todo.completed"
+        @change="toggleToDo(index)"
       >
       <!-- end check box -->
 
@@ -47,12 +48,23 @@
 </template>
 
 <script>
+
 export default {
     // App.vue에서 받는 데이터를 props를 통해 설정
     props: {
         todos : {
             type: Array,
             required : true
+        }
+    },
+    setup(props, context) {
+        // 부모 컴포넌트에 todo index값을 보내기 위한 함수
+        const toggleToDo = (index) => {
+            context.emit("toggle-ToDo", index);
+        };
+
+        return {
+            toggleToDo,
         }
     }
 }

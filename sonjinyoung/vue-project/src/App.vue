@@ -32,7 +32,7 @@
 
 <!-- ToDoCard -->
 <!-- :todos = props(부모 컴포넌트 -> 자식 컴포넌트) -->
-<ToDoList :todos = "todos" />
+<ToDoList :todos = "todos" @toggle-ToDo="toggleToDo" />
 <!-- end ToDoCard -->
 
 </div>
@@ -73,11 +73,17 @@
       const deleteTodo = (index) => {
         todos.value.splice(index, 1);
       }
+      
+      // ToDoList.vue에서 index 데이터를 받아 completed의 값을 변경
+      const toggleToDo = (index) => {
+        todos.value[index].completed = !todos.value[index].completed; 
+      }
 
     return {
       todos,
       addToDo,
-      deleteTodo
+      deleteTodo,
+      toggleToDo
     };
   } 
 }

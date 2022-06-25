@@ -30,51 +30,10 @@
     This field cannot be empty
 </div>
 
-<!-- add card -->
-<!-- v-for를 통해 todos에 있는 객체가 추가 될때마다 card로 생성(v-for와 :key는 한 세트) -->
-<div 
-  class="card mt-2"
-  v-for="(todo,index) in todos"
-  :key="todo.id"
->
-  <div class="card-body p-2 d-flex align-items-center">
-    <!-- check form -->
-    <div class="form-check flex-grow-1">
-      <!-- check box(v-model로 true, false 값에 따라 checking) -->
-      <input
-        class="form-check-input"
-        type="checkbox"
-        v-model="todo.completed"
-      >
-      <!-- end check box -->
-
-      <!-- todo value -->
-      <!-- :class를 통해 checking될 경우 스타일을 설정 -->
-      <label 
-        class="form-check-label"
-        :class="{ todoCheck : todo.completed }"
-      >
-        <!-- 설정한 todos 바인딩 -->
-        {{todo.subject}}
-      </label>
-      <!-- end todo value -->
-    </div>
-    <!-- end check form -->
-
-    <!-- delete Button -->
-    <div>
-        <button 
-          class="btn btn-danger btn-sm"
-          @click="deleteTodo(index)"
-        > 
-          delete 
-        </button>
-    </div>
-    <!-- end delete Button -->
-
-  </div>
-</div>
-<!-- end card -->
+<!-- ToDoCard -->
+<!-- :todos = props(부모 컴포넌트 -> 자식 컴포넌트) -->
+<ToDoList :todos = "todos" />
+<!-- end ToDoCard -->
 
 </div>
 <!-- end To-do list add form -->
@@ -89,10 +48,14 @@
   // ToDoSimpleForm.vue import
   import ToDoSimpleForm from './components/ToDoSimpleForm.vue';
 
+  // ToDoList.vue import
+  import ToDoList from './components/ToDoList.vue';
+
   export default {
     // component import시 반드시 export default -> components에 추가
     components : {
-      ToDoSimpleForm
+      ToDoSimpleForm,
+      ToDoList
     },
 
     // Vue3 = composition API -> setup() 사용

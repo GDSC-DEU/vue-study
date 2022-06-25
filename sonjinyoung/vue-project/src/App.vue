@@ -58,8 +58,22 @@
   :key="todo.id"
 >
   <div class="card-body p-2">
-    <!-- 설정한 todos 바인딩 -->
-    {{todo.subject}}
+    <div class="form-check">
+      <!-- check box(v-model로 true, false 값에 따라 checking) -->
+      <input
+        class="form-check-input"
+        type="checkbox"
+        v-model="todo.completed"
+      >
+      <!-- end check box -->
+
+      <!-- todo value -->
+      <label class="form-check-label">
+        <!-- 설정한 todos 바인딩 -->
+        {{todo.subject}}
+      </label>
+      <!-- end todo value -->
+    </div>
   </div>
 </div>
 <!-- end card -->
@@ -94,7 +108,8 @@ export default {
       // emptyString이 아니면 데이터가 todos 배열에 추가되고 hasError의 값이 false로 변환
         todos.value.push({
           id:Date.now(),
-          subject:todo.value
+          subject:todo.value,
+          completed:false,
         });
         hasError.value = false;
       }

@@ -68,7 +68,11 @@
       <!-- end check box -->
 
       <!-- todo value -->
-      <label class="form-check-label">
+      <!-- :class를 통해 checking될 경우 스타일을 설정 -->
+      <label 
+        class="form-check-label"
+        :class="{ todoCheck : todo.completed }"
+      >
         <!-- 설정한 todos 바인딩 -->
         {{todo.subject}}
       </label>
@@ -127,5 +131,8 @@ export default {
 
 <!-- CSS 코드 영역(style) -->
 <style>
-
+  .todoCheck {
+    text-decoration: line-through;
+    color:gray;
+  }
 </style>

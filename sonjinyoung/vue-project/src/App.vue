@@ -1,9 +1,13 @@
 <!-- html 코드 영역(template) -->
 <template>
+
 <!-- To-do list add form -->
 <div class="container mt-2">
+
 <!-- title -->
 <h2>To-Do List</h2>
+
+<!-- form -->
 <!-- button에서 submit버튼 누를 시 @submit을 통해 onSubmit 함수 실행 -->
 <form
   @submit.prevent="onSubmit"
@@ -20,6 +24,8 @@
       placeholder="please add To-do"
     >
   </div>
+  <!-- input end -->
+    
   <!-- button -->  
   <div>
     <button
@@ -30,7 +36,20 @@
       add
     </button>
   </div>
+  <!-- button end -->  
+
 </form>
+<!-- form end -->
+
+<!-- Error Message -->  
+<div
+  class="mt-2"
+  style="color:red;"
+  v-show="hasError"
+>
+    This field cannot be empty
+</div>
+
 <!-- add card -->
 <!-- v-for를 통해 todos에 있는 객체가 추가 될때마다 card로 생성(v-for와 :key는 한 세트) -->
 <div 
@@ -43,7 +62,10 @@
     {{todo.subject}}
   </div>
 </div>
+<!-- end card -->
+
 </div>
+<!-- end To-do list add form -->
 
 </template>
 
@@ -59,19 +81,30 @@ export default {
     // todos 배열에 초깃값 설정
     const todos = ref([
     ]);
+    // Error Message의 조건부 바인딩을 위한 변수
+    const hasError = ref(false);
  
     // input에서 입력 한 값을 todos 배열에 저장
     const onSubmit = () => {
-      // ref 사용시 변수.value로 변경
-      return todos.value.push({
-        id:Date.now(),
-        subject:todo.value
-      }); 
-    }
+      // add 버튼을 누를 시 emptyString일 경우
+      // hasError의 값이 true로 바뀌어 조건부 바인딩에 의해 ErrorMessage 출력 
+      if(todo.value === '') {
+        hasError.value = true;
+      } else {
+      // emptyString이 아니면 데이터가 todos 배열에 추가되고 hasError의 값이 false로 변환
+        todos.value.push({
+          id:Date.now(),
+          subject:todo.value
+        });
+        hasError.value = false;
+      }
+    };
+
     return {
       todo,
       todos,
-      onSubmit
+      onSubmit,
+      hasError
     };
   } 
 }

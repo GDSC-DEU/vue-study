@@ -35,7 +35,7 @@
     <div>
         <button 
           class="btn btn-danger btn-sm"
-          @click="deleteTodo(index)"
+          @click="deleteToDo(index)"
         > 
           delete 
         </button>
@@ -57,20 +57,21 @@ export default {
             required : true
         }
     },
-    setup(props, context) {
+    emits: ['toggle-ToDo', 'delete-ToDo'],
+    setup(props, {emit}) {
         // 부모 컴포넌트에 todo index값을 보내기 위한 함수
         const toggleToDo = (index) => {
-            context.emit("toggle-ToDo", index);
+            emit('toggle-ToDo', index);
         };
 
         // index 값을 부모 컴포넌트에 보내줌
-        const deleteTodo = (index) => {
-            context.emit("delete-ToDo", index);
+        const deleteToDo = (index) => {
+            emit('delete-ToDo', index);
         }
 
         return {
             toggleToDo,
-            deleteTodo,
+            deleteToDo,
         }
     }
 }

@@ -38,8 +38,10 @@
   // reactive state를 위한 ref import
   import {ref} from 'vue';
 export default {
+    emits: ['add-ToDo'],
+
     // props와 emit을 위해 인자에 props, context 추가
-    setup(props, context) {
+    setup(props, {emit}) {
         // ref 사용 시 ref()안에 기본 자료형 or 참조형(reactive도 가능) 넣기
         const todo = ref("");
 
@@ -55,7 +57,7 @@ export default {
             } else {
                 // context.emit을 통해 자식 컴포넌트 -> 부모 컴포먼트로 데이터 이동
                 // emit의 첫번째 인자로는 이벤트 이름, 두번째는 보낼 데이터
-                context.emit('add-ToDo', {
+                emit('add-ToDo', {
                     id: Date.now(),
                     subject: todo.value,
                     completed: false,

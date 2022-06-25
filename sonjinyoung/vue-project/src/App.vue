@@ -21,7 +21,7 @@
       class="form-control" 
       type="text"
       v-model="todo"
-      placeholder="please add To-do"
+      placeholder="Add To-Do-List :)"
     >
   </div>
   <!-- input end -->
@@ -41,6 +41,15 @@
 </form>
 <!-- form end -->
 
+<!-- empty todos -->
+<div
+  class="mt-2"
+  v-show="!todos.length"
+  style="color:red;"
+>
+  Please Add To-do
+</div>
+
 <!-- Error Message -->  
 <div
   class="mt-2"
@@ -54,11 +63,12 @@
 <!-- v-for를 통해 todos에 있는 객체가 추가 될때마다 card로 생성(v-for와 :key는 한 세트) -->
 <div 
   class="card mt-2"
-  v-for="todo in todos"
+  v-for="(todo,index) in todos"
   :key="todo.id"
 >
-  <div class="card-body p-2">
-    <div class="form-check">
+  <div class="card-body p-2 d-flex align-items-center">
+    <!-- check form -->
+    <div class="form-check flex-grow-1">
       <!-- check box(v-model로 true, false 값에 따라 checking) -->
       <input
         class="form-check-input"
@@ -78,6 +88,19 @@
       </label>
       <!-- end todo value -->
     </div>
+    <!-- end check form -->
+
+    <!-- delete Button -->
+    <div>
+        <button 
+          class="btn btn-danger btn-sm"
+          @click="deleteTodo(index)"
+        > 
+          delete 
+        </button>
+    </div>
+    <!-- end delete Button -->
+
   </div>
 </div>
 <!-- end card -->
@@ -119,11 +142,17 @@ export default {
       }
     };
 
+    // delete 버튼 누를 시 todos 안 해당되는 index를 삭제
+    const deleteTodo = (index) => {
+      todos.value.splice(index, 1);
+    }
+
     return {
       todo,
       todos,
       onSubmit,
-      hasError
+      hasError,
+      deleteTodo
     };
   } 
 }

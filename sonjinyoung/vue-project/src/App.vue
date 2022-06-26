@@ -93,22 +93,22 @@
       const error = ref('');
   
       // 자식 컴포넌트에서 받은 데이터를 todos 배열에 저장
-      const addToDo = (todo) => {
+      // async - await로 비동기 함수 형태로 만듬
+      const addToDo = async (todo) => {
         error.value = '';
         // axios.post를 통해 데이터 전송 요청하여 DB에 데이터 저장
-        axios.post('http://localhost:3000/todos', {
-          subject: todo.subject,
-          completed: todo.completed,
-        // 요청이 성공되어 DB에 저장될 경우 todos에 데이터 추가  
-        }).then(res => {
-          console.log(res);
+        try {
+          const res = await axios.post('http://localhost:3000/todos', {
+            subject: todo.subject,
+            completed: todo.completed,
+          });
+          // 요청이 성공되어 DB에 저장될 경우 todos에 데이터 추가  
           todos.value.push(res.data);
-        // 요청이 실패되어 DB에 저장되지 않을 경우 error 메시지 출력  
-        }).catch(err => {
+        } catch (err) {
           console.log(err);
           error.value = 'Something went wrong';
-        });
-      };
+        }
+      }
 
       // delete 버튼 누를 시 todos 안 해당되는 index를 삭제
       // 이때 index 값은 ToDoList.vue의 deleteToDo()를 통해 받음

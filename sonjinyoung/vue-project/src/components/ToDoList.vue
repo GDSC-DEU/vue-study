@@ -13,7 +13,7 @@
       <input
         class="form-check-input"
         type="checkbox"
-        :value="todo.completed"
+        :checked="todo.completed"
         @change="toggleToDo(index)"
       >
       <!-- end check box -->

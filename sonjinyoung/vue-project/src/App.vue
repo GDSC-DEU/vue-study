@@ -145,8 +145,22 @@
       }
       
       // ToDoList.vue에서 index 데이터를 받아 completed의 값을 변경
-      const toggleToDo = (index) => {
-        todos.value[index].completed = !todos.value[index].completed; 
+      const toggleToDo = async (index) => {
+        // error message 초기화
+        error.value = '';
+        // 인자로 받은 index를 통해 지우려고 하는 index의 id값을 변수로 저장
+        const id = todos.value[index].id;
+        try {
+          // patch 요청을 통해 DB에 있는 특정 요소를 변경
+          await axios.patch('http://localhost:3000/todos/' + id, {
+            completed : !todos.value[index].completed
+          });
+          // DB에서 성공적으로 변경 될 경우 todos 배열에서도 업데이트
+          todos.value[index].completed = !todos.value[index].completed; 
+        } catch(err) {
+          console.log(err);
+          error.value = 'Something went wrong';     
+        }       
       }
 
       // searchBar에서 검색한 결과를 나타내는 computed한 값

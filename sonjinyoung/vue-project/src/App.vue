@@ -2,11 +2,20 @@
 <template>
 
 <!-- To-do list add form -->
-<div class="container mt-2">
+<div class="container mt-4">
 
 <!-- title -->
 <h2>To-Do List</h2>
 
+<!-- SearchBar -->
+<input
+  class="form-control"
+  type="text"
+  v-model="searchText"
+  placeholder="Search To-Do"
+>
+<!-- end SearchBar -->
+<hr/>
 <!-- ToDoSimpleForm.vue-->
 <!-- @addToDo = context.emit() 첫번째 인자에 있는 이벤트 이름 -->
 <ToDoSimpleForm @add-ToDo="addToDo" />
@@ -15,10 +24,11 @@
 <!-- empty todos -->
 <div
   class="mt-2"
-  v-show="!todos.length"
+  v-show="!filteredTodos.length"
   style="color:red;"
 >
-  Please Add To-do
+  To-Do-List does not exist
+  
 </div>
 
 <!-- Error Message -->  
@@ -33,7 +43,7 @@
 <!-- ToDoCard -->
 <!-- :todos = props(부모 컴포넌트 -> 자식 컴포넌트) -->
 <ToDoList 
-  :todos = "todos"
+  :todos = "filteredTodos"
   @toggle-ToDo="toggleToDo"
   @delete-ToDo="deleteToDo"
 />
@@ -47,7 +57,8 @@
 <!-- JavaScript 코드 영역(script) -->
 <script>
   // reactive state를 위한 ref import
-  import {ref} from 'vue';
+  // 검색 결과 감지를 위한 computed import
+  import {ref, computed} from 'vue';
 
   // ToDoSimpleForm.vue import
   import ToDoSimpleForm from './components/ToDoSimpleForm.vue';
@@ -67,6 +78,9 @@
       // todos 배열에 초깃값 설정
       const todos = ref([
       ]);
+
+      // searchBar의 검색 결과 text
+      const searchText = ref('');
   
       // 자식 컴포넌트에서 받은 데이터를 todos 배열에 저장
       const addToDo = (todo) => {
@@ -84,11 +98,26 @@
         todos.value[index].completed = !todos.value[index].completed; 
       }
 
+      // searchBar에서 검색한 결과를 나타내는 computed한 값
+      const filteredTodos = computed(() => {
+        // 만약 사용자가 검색을 했다면 원래 todoList에서 filter한 결과를 가져옴
+        if(searchText.value) {
+          // filter()는 todos 배열에 있는 각 todo들에 대해 todo의 subject값이 searchText 값과 일치하면 필터링
+          return todos.value.filter(todo => {
+            return todo.subject.includes(searchText.value);
+          })
+        }
+        // 만약 사용자가 검색하지 않았다면 원래 todoList 결과를 가져옴
+        return todos.value
+      });
+
     return {
       todos,
       addToDo,
       deleteToDo,
-      toggleToDo
+      toggleToDo,
+      searchText,
+      filteredTodos,
     };
   } 
 }

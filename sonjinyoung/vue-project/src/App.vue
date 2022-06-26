@@ -92,6 +92,22 @@
       // 데이터 전송 실패했을 때를 위한 변수 error
       const error = ref('');
   
+      // DB에서 데이터를 가져와 새로고침시 데이터가 사라지는 것을 방지
+      const getTodos = async () => {
+        try {
+          // get 요청을 통해 DB에 있는 데이터를 가져와서 변수 res에 저장
+          const res = await axios.get('http://localhost:3000/todos');
+          // todos의 값을 res의 데이터로 받음
+          todos.value = res.data;
+        } catch(err) {
+          console.log(err);
+          error.value = 'Something went wrong';
+        }
+      };
+
+      // 반드시 getTodos() 호출해주기!
+      getTodos();
+
       // 자식 컴포넌트에서 받은 데이터를 todos 배열에 저장
       // async - await로 비동기 함수 형태로 만듬
       const addToDo = async (todo) => {
@@ -141,7 +157,8 @@
       toggleToDo,
       searchText,
       filteredTodos,
-      error
+      error,
+      getTodos,
     };
   } 
 }

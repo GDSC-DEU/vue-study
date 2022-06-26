@@ -27,8 +27,7 @@
   v-show="!filteredTodos.length"
   style="color:red;"
 >
-  To-Do-List does not exist
-  
+  There is nothing to display
 </div>
 
 <!-- Error Message -->  

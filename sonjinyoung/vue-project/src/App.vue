@@ -128,8 +128,20 @@
 
       // delete 버튼 누를 시 todos 안 해당되는 index를 삭제
       // 이때 index 값은 ToDoList.vue의 deleteToDo()를 통해 받음
-      const deleteToDo = (index) => {
-        todos.value.splice(index, 1);
+      const deleteToDo = async (index) => {
+        // error message 초기화
+        error.value = '';
+        // 인자로 받은 index를 통해 지우려고 하는 index의 id값을 변수로 저장
+        const id = todos.value[index].id;
+        try {
+          // delete 요청을 보낼 때 변수로 저장해놓은 id값을 통해 db에 있는 id에 해당되는 데이터를 삭제
+          await axios.delete('http://localhost:3000/todos/' + id);
+          // DB에서 삭제될 경우 todos의 데이터도 삭제
+          todos.value.splice(index, 1);
+        } catch(err) {
+          console.log(err);
+          error.value = 'Something went wrong';          
+        }
       }
       
       // ToDoList.vue에서 index 데이터를 받아 completed의 값을 변경

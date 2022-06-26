@@ -21,6 +21,11 @@
 <ToDoSimpleForm @add-ToDo="addToDo" />
 <!-- end ToDoSimpleForm.vue-->
 
+<!-- DB에 저장되지 않았을 경우 error message -->
+<div style="color:red;">
+  {{error}}
+</div>
+
 <!-- empty todos -->
 <div
   class="mt-2"
@@ -59,6 +64,9 @@
   // 검색 결과 감지를 위한 computed import
   import {ref, computed} from 'vue';
 
+  // axios import (DB에 http request 요청 위한 라이브러리)
+  import axios from 'axios';
+
   // ToDoSimpleForm.vue import
   import ToDoSimpleForm from './components/ToDoSimpleForm.vue';
 
@@ -80,10 +88,26 @@
 
       // searchBar의 검색 결과 text
       const searchText = ref('');
+
+      // 데이터 전송 실패했을 때를 위한 변수 error
+      const error = ref('');
   
       // 자식 컴포넌트에서 받은 데이터를 todos 배열에 저장
       const addToDo = (todo) => {
-        todos.value.push(todo);
+        error.value = '';
+        // axios.post를 통해 데이터 전송 요청하여 DB에 데이터 저장
+        axios.post('http://localhost:3000/todos', {
+          subject: todo.subject,
+          completed: todo.completed,
+        // 요청이 성공되어 DB에 저장될 경우 todos에 데이터 추가  
+        }).then(res => {
+          console.log(res);
+          todos.value.push(res.data);
+        // 요청이 실패되어 DB에 저장되지 않을 경우 error 메시지 출력  
+        }).catch(err => {
+          console.log(err);
+          error.value = 'Something went wrong';
+        });
       };
 
       // delete 버튼 누를 시 todos 안 해당되는 index를 삭제
@@ -117,6 +141,7 @@
       toggleToDo,
       searchText,
       filteredTodos,
+      error
     };
   } 
 }

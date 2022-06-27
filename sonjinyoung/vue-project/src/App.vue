@@ -52,9 +52,33 @@
   @delete-ToDo="deleteToDo"
 />
 <!-- end ToDoCard -->
-
+<!-- Pagination -->
+<nav aria-label="Page navigation example" style="display:flex; justify-content:center; margin-top: 50px;">
+  <ul class="pagination">
+    <!-- 현재 페이지가 1페이지가 아닐 때만 보여줌 -->
+    <li v-if="currentPage !==1 " class="page-item">
+      <a class="page-link" href="#">Previous</a>
+    </li>
+    <!-- v-for를 통해 전체 페이지 수에 따라 Pagination을 구현 -->
+    <li
+      v-for="page in numberOfPages"
+      :key=page
+      :class = "currentPage === page ? 'active' : ''"
+      class="page-item"
+    >
+      <!-- page가 index이기 때문에 {{page}}를 해야 pagination이 가능 -->
+      <a class="page-link" href="#">{{page}}</a>
+    </li>
+    <!-- 현재 페이지가 마지막 페이지가 아닐 때만 보여줌 -->
+    <li v-if="currentPage !== numberOfPages" class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
+<!-- end Pagination -->
 </div>
 <!-- end To-do list add form -->
+
 
 </template>
 
@@ -93,18 +117,23 @@
       const error = ref('');
 
       // 각각 총 데이터 수, 1페이지, 페이지 당 최대 데이터 수
-      const totalPage = ref(0);
-      const page = ref(1);
+      const totalTodo = ref(0);
+      const currentPage = ref(1);
       const limit = 5;
+
+      // Pagination을 위한 computed한 값 
+      const numberOfPages = computed(() => {
+        return Math.ceil(totalTodo.value/limit);
+      });
 
       // DB에서 데이터를 가져와 새로고침시 데이터가 사라지는 것을 방지
       const getTodos = async () => {
         try {
           // get 요청을 통해 DB에 있는 데이터를 가져와서 변수 res에 저장
           // 페이지네이션을 위해 데이터의 각 페이지당 최대 데이터 수를 5개로 지정
-          const res = await axios.get(`http://localhost:3000/todos?_page=${page.value}&_limit=${limit}`);
+          const res = await axios.get(`http://localhost:3000/todos?_page=${currentPage.value}&_limit=${limit}`);
           // x-total-count = 총 데이터의 개수 => totalPage에 저장
-          totalPage.value = res.headers['x-total-count'];
+          totalTodo.value = res.headers['x-total-count'];
           // todos의 값을 res의 데이터로 받음
           todos.value = res.data;
         } catch(err) {
@@ -193,8 +222,9 @@
       filteredTodos,
       error,
       getTodos,
-      totalPage,
-      page
+      totalTodo,
+      currentPage,
+      numberOfPages
     };
   } 
 }

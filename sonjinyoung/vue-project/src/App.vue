@@ -13,6 +13,7 @@
   type="text"
   v-model="searchText"
   placeholder="Search To-Do"
+  @keyup.enter="searchToDo"
 >
 <!-- end SearchBar -->
 <hr/>
@@ -206,12 +207,27 @@
         }       
       }
 
+      // clearTimeout를 위한 변수 timeout
+      let timeout = null;
+
+      const searchToDo = () => {
+        clearTimeout(timeout);
+        getTodos(1);
+      };
+
       // 사용자가 입력한 값을 모두 감지하여 getTodos에 DB로 요청
       // 요청되어 받아온 값(검색 결과)를 보여주게 됨.
       watch(searchText, () => {
-        getTodos(1);
+        // 유저가 한 글자씩 입력할 때 마다 setTimeout()이 초기화
+        clearTimeout(timeout);
+        // setTimeout()을 통해 DB에 데이터 요청하는 것을 지연시켜
+        // 사용자가 입력을 다 끝낸 후에만 DB에 데이터 보낼 수 있도록 함
+        timeout = setTimeout(() => {
+          getTodos(1);
+        }, 2000);
       });
       return {
+        searchToDo,
         todos,
         addToDo,
         deleteToDo,

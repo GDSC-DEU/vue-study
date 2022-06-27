@@ -57,7 +57,7 @@
   <ul class="pagination">
     <!-- 현재 페이지가 1페이지가 아닐 때만 보여줌 -->
     <li v-if="currentPage !==1 " class="page-item">
-      <a class="page-link" href="#">Previous</a>
+      <a style="cursor : pointer" class="page-link" @click="getTodos(currentPage - 1)">Previous</a>
     </li>
     <!-- v-for를 통해 전체 페이지 수에 따라 Pagination을 구현 -->
     <li
@@ -67,11 +67,11 @@
       class="page-item"
     >
       <!-- page가 index이기 때문에 {{page}}를 해야 pagination이 가능 -->
-      <a class="page-link" href="#">{{page}}</a>
+      <a style="cursor : pointer" class="page-link" @click="getTodos(page)">{{page}}</a>
     </li>
     <!-- 현재 페이지가 마지막 페이지가 아닐 때만 보여줌 -->
     <li v-if="currentPage !== numberOfPages" class="page-item">
-      <a class="page-link" href="#">Next</a>
+      <a class="page-link" @click="getTodos(currentPage + 1)" style="cursor : pointer;">Next</a>
     </li>
   </ul>
 </nav>
@@ -127,7 +127,9 @@
       });
 
       // DB에서 데이터를 가져와 새로고침시 데이터가 사라지는 것을 방지
-      const getTodos = async () => {
+      const getTodos = async (page = currentPage.value) => {
+        // 인자로 받은 page 값을 현재 페이지 값으로 설정
+        currentPage.value = page;
         try {
           // get 요청을 통해 DB에 있는 데이터를 가져와서 변수 res에 저장
           // 페이지네이션을 위해 데이터의 각 페이지당 최대 데이터 수를 5개로 지정

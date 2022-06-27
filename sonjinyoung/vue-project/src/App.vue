@@ -132,10 +132,12 @@
         // 인자로 받은 page 값을 현재 페이지 값으로 설정
         currentPage.value = page;
         try {
-          // get 요청을 통해 DB에 있는 데이터를 가져와서 변수 res에 저장
-          // 페이지네이션을 위해 데이터의 각 페이지당 최대 데이터 수를 5개로 지정
-          // subject_like를 통해 DB에 검색한 값에 대해 찾은 후 반환
-          const res = await axios.get(`http://localhost:3000/todos?subject_like=${searchText.value}&_page=${currentPage.value}&_limit=${limit}`);
+          // <http request>
+          // 1. get 요청을 통해 DB에 있는 데이터를 가져와서 변수 res에 저장
+          // 2. 페이지네이션을 위해 데이터의 각 페이지당 최대 데이터 수를 5개로 지정
+          // 3. subject_like를 통해 DB에 검색한 값에 대해 찾은 후 반환
+          // 4. sort와 order를 통해 id값에 대해 오름차순으로 정렬
+          const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${currentPage.value}&_limit=${limit}`);
           // x-total-count = 총 데이터의 개수 => totalPage에 저장
           totalTodo.value = res.headers['x-total-count'];
           // todos의 값을 res의 데이터로 받음
@@ -155,12 +157,12 @@
         error.value = '';
         // axios.post를 통해 데이터 전송 요청하여 DB에 데이터 저장
         try {
-          const res = await axios.post('http://localhost:3000/todos', {
+           await axios.post('http://localhost:3000/todos', {
             subject: todo.subject,
             completed: todo.completed,
           });
-          // 요청이 성공되어 DB에 저장될 경우 todos에 데이터 추가  
-          todos.value.push(res.data);
+          // 요청이 성공되어 DB에 저장될 경우 DB에 다시 데이터를 받아 업데이트 후 받은 res 값을 todos.value에 저장
+          getTodos(1);
         } catch (err) {
           console.log(err);
           error.value = 'Something went wrong';
@@ -177,8 +179,8 @@
         try {
           // delete 요청을 보낼 때 변수로 저장해놓은 id값을 통해 db에 있는 id에 해당되는 데이터를 삭제
           await axios.delete('http://localhost:3000/todos/' + id);
-          // DB에서 삭제될 경우 todos의 데이터도 삭제
-          todos.value.splice(index, 1);
+          // 요청이 성공되어 DB에 저장될 경우 DB에 다시 데이터를 받아 업데이트 후 받은 res 값을 todos.value에 저장
+          getTodos(1);
         } catch(err) {
           console.log(err);
           error.value = 'Something went wrong';          
@@ -209,18 +211,18 @@
       watch(searchText, () => {
         getTodos(1);
       });
-    return {
-      todos,
-      addToDo,
-      deleteToDo,
-      toggleToDo,
-      searchText,
-      error,
-      getTodos,
-      totalTodo,
-      currentPage,
-      numberOfPages
-    };
+      return {
+        todos,
+        addToDo,
+        deleteToDo,
+        toggleToDo,
+        searchText,
+        error,
+        getTodos,
+        totalTodo,
+        currentPage,
+        numberOfPages
+      };
   } 
 }
 </script>

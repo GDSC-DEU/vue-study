@@ -29,7 +29,7 @@
 <!-- empty todos -->
 <div
   class="mt-2"
-  v-show="!filteredTodos.length"
+  v-show="!todos.length"
   style="color:red;"
 >
   There is nothing to display
@@ -47,7 +47,7 @@
 <!-- ToDoCard -->
 <!-- :todos = props(부모 컴포넌트 -> 자식 컴포넌트) -->
 <ToDoList 
-  :todos = "filteredTodos"
+  :todos = "todos"
   @toggle-ToDo="toggleToDo"
   @delete-ToDo="deleteToDo"
 />
@@ -86,7 +86,8 @@
 <script>
   // reactive state를 위한 ref import
   // 검색 결과 감지를 위한 computed import
-  import {ref, computed} from 'vue';
+  // 변수에 대한 현재 값과 이전 값을 알기 위한 watch import
+  import {ref, computed, watch} from 'vue';
 
   // axios import (DB에 http request 요청 위한 라이브러리)
   import axios from 'axios';
@@ -133,7 +134,8 @@
         try {
           // get 요청을 통해 DB에 있는 데이터를 가져와서 변수 res에 저장
           // 페이지네이션을 위해 데이터의 각 페이지당 최대 데이터 수를 5개로 지정
-          const res = await axios.get(`http://localhost:3000/todos?_page=${currentPage.value}&_limit=${limit}`);
+          // subject_like를 통해 DB에 검색한 값에 대해 찾은 후 반환
+          const res = await axios.get(`http://localhost:3000/todos?subject_like=${searchText.value}&_page=${currentPage.value}&_limit=${limit}`);
           // x-total-count = 총 데이터의 개수 => totalPage에 저장
           totalTodo.value = res.headers['x-total-count'];
           // todos의 값을 res의 데이터로 받음
@@ -202,26 +204,17 @@
         }       
       }
 
-      // searchBar에서 검색한 결과를 나타내는 computed한 값
-      const filteredTodos = computed(() => {
-        // 만약 사용자가 검색을 했다면 원래 todoList에서 filter한 결과를 가져옴
-        if(searchText.value) {
-          // filter()는 todos 배열에 있는 각 todo들에 대해 todo의 subject값이 searchText 값과 일치하면 필터링
-          return todos.value.filter(todo => {
-            return todo.subject.includes(searchText.value);
-          })
-        }
-        // 만약 사용자가 검색하지 않았다면 원래 todoList 결과를 가져옴
-        return todos.value
+      // 사용자가 입력한 값을 모두 감지하여 getTodos에 DB로 요청
+      // 요청되어 받아온 값(검색 결과)를 보여주게 됨.
+      watch(searchText, () => {
+        getTodos(1);
       });
-
     return {
       todos,
       addToDo,
       deleteToDo,
       toggleToDo,
       searchText,
-      filteredTodos,
       error,
       getTodos,
       totalTodo,

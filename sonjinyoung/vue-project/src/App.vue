@@ -91,12 +91,20 @@
 
       // 데이터 전송 실패했을 때를 위한 변수 error
       const error = ref('');
-  
+
+      // 각각 총 데이터 수, 1페이지, 페이지 당 최대 데이터 수
+      const totalPage = ref(0);
+      const page = ref(1);
+      const limit = 5;
+
       // DB에서 데이터를 가져와 새로고침시 데이터가 사라지는 것을 방지
       const getTodos = async () => {
         try {
           // get 요청을 통해 DB에 있는 데이터를 가져와서 변수 res에 저장
-          const res = await axios.get('http://localhost:3000/todos');
+          // 페이지네이션을 위해 데이터의 각 페이지당 최대 데이터 수를 5개로 지정
+          const res = await axios.get(`http://localhost:3000/todos?_page=${page.value}&_limit=${limit}`);
+          // x-total-count = 총 데이터의 개수 => totalPage에 저장
+          totalPage.value = res.headers['x-total-count'];
           // todos의 값을 res의 데이터로 받음
           todos.value = res.data;
         } catch(err) {
@@ -185,6 +193,8 @@
       filteredTodos,
       error,
       getTodos,
+      totalPage,
+      page
     };
   } 
 }

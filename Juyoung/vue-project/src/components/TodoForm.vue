@@ -9,20 +9,6 @@
     >
       <div class="row">
         <div class="col-6">
-          <!-- <div class="form-group">
-            <label>Subiect</label>
-            <input 
-              v-model="todo.subject" 
-              type="text" 
-              class="form-control"
-            >
-            <div 
-              v-if="subjectError"
-              class="text-red"
-            >
-              {{ subjectError }}
-            </div>
-          </div> -->
           <Input 
             label="Subject"
             v-model:subject="todo.subject"
@@ -78,7 +64,7 @@
 <script>
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
-import { ref, computed, onUpdated } from 'vue';
+import { ref, computed } from 'vue';
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue';
 import { useToast } from '@/composables/toast';
@@ -97,9 +83,6 @@ export default {
     }
   },
   setup(props) {
-    onUpdated(()=> {
-      console.log(todo.value.subject);
-    })
     const route = useRoute();
     const router = useRouter();
     const todo = ref({
